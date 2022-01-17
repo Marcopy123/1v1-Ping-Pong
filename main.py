@@ -53,23 +53,26 @@ radius = 20
 redScore = 0
 blueScore = 0
 
+leftHandYPos = int(height/2)
+rightHandYPos = int(height/2)
+
 while True:
     ignore,  frame = cam.read()
     frame = cv2.resize(frame, (width, height))
 
     handData, handsType = findHands.Marks(frame)
 
-    leftHandYPos = 0
-    rightHandYPos = 0
 
     for hand, handType in zip(handData, handsType):
         if handType == "Right": # this is the left hand
-            cv2.rectangle(frame, (10, int(hand[8][1] + paddleHeight/2)), (paddleWidth+10, int(hand[8][1] - paddleHeight/2)), paddleColorUser1, -1)
-            rightHandYPos = hand[8][1]
+            rightHandYPos = hand[8][1]       
 
         if handType == "Left": # this is the right hand
-            cv2.rectangle(frame, (width - paddleWidth - 10, int(hand[8][1] + paddleHeight/2)), (width-10, int(hand[8][1] - paddleHeight/2)), paddleColorUser2, -1)
             leftHandYPos = hand[8][1]
+    
+    cv2.rectangle(frame, (10, int(rightHandYPos + paddleHeight/2)), (paddleWidth+10, int(rightHandYPos - paddleHeight/2)), paddleColorUser1, -1)
+    cv2.rectangle(frame, (width - paddleWidth - 10, int(leftHandYPos + paddleHeight/2)), (width-10, int(leftHandYPos - paddleHeight/2)), paddleColorUser2, -1)
+            
 
     if yPos - radius >= 0:
         deltaY = -deltaY
